@@ -1,0 +1,4 @@
+# 本地仅保留基础配置，详细配置由Nacos配置中心管理
+spring:
+  profiles:
+    active: dev

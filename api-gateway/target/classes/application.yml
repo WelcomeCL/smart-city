@@ -1,0 +1,8 @@
+# 本地仅保留基础配置，详细配置由Nacos配置中心管理
+spring:
+  profiles:
+    active: dev
+
+# 如需本地调试覆盖配置，可在此添加
+# server:
+#   port: 8080
