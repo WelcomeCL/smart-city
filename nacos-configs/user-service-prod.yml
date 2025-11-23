@@ -1,0 +1,46 @@
+spring:
+  profiles:
+    active: prod
+  datasource:
+    url: jdbc:mysql://mysql-prod:3306/smartcitydb_prod?useSSL=true&serverTimezone=UTC
+    username: prod_user
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connectionTimeout: 30000
+      maximumPoolSize: 10
+      minimumIdle: 5
+      idleTimeout: 600000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+
+server:
+  port: 8081
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+
+logging:
+  level:
+    root: WARN
+    com.smartcity: INFO
+  file:
+    name: /logs/user-service.log
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server-prod:8761/eureka/
+    registryFetchIntervalSeconds: 30
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.cloud.client.ip-address}:${server.port}
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90

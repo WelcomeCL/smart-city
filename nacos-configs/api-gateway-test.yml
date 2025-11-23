@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: test
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - StripPrefix=1
+        - id: traffic-service
+          uri: lb://traffic-service
+          predicates:
+            - Path=/api/traffic/**
+          filters:
+            - StripPrefix=1
+
+ eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server-test:8761/eureka/
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.cloud.client.ip-address}:${server.port}

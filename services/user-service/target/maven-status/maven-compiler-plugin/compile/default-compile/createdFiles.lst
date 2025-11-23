@@ -1,1 +1,17 @@
 com/smartcity/userservice/UserServiceApplication.class
+com/smartcity/user/application/service/impl/UserServiceImpl.class
+com/smartcity/user/infrastructure/persistence/UserJpaRepository.class
+com/smartcity/user/infrastructure/repository/UserRepository.class
+com/smartcity/user/application/dto/LoginRequest.class
+com/smartcity/user/application/service/UserService.class
+com/smartcity/user/interfaces/rest/UserController.class
+com/smartcity/user/application/dto/UserResponse.class
+com/smartcity/user/infrastructure/repository/UserRepositoryImpl.class
+com/smartcity/user/domain/entity/User.class
+com/smartcity/user/application/dto/UpdateUserRequest.class
+com/smartcity/user/infrastructure/persistence/UserJpaEntity.class
+com/smartcity/user/application/dto/LoginResponse.class
+com/smartcity/user/application/dto/CreateUserRequest.class
+com/smartcity/user/domain/entity/User$UserStatus.class
+com/smartcity/user/domain/model/UserRepository.class
+com/smartcity/user/domain/service/UserDomainService.class

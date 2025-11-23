@@ -1,3 +1,11 @@
 /Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/CommonApplication.java
 /Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/exception/BusinessException.java
 /Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/exception/ErrorCode.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/exception/DomainErrorCode.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/exception/DomainException.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/model/DomainEvent.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/model/Entity.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/model/Repository.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/service/DomainService.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/domain/valueobject/ValueObject.java
+/Users/chenlei/Project/smart-city/common/src/main/java/com/smartcity/common/sharedkernel/infrastructure/config/DddConfiguration.java
