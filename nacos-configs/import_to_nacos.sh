@@ -103,13 +103,12 @@ import_config() {
   
   echo "正在导入配置: ${data_id} (${group})"
   
-  # 使用curl调用Nacos API导入配置，添加登录信息
-  response=$(curl -s -X POST "${NACOS_URL}" \
+  # 使用curl调用Nacos API导入配置（不使用namespaceId，使用默认命名空间）
+  echo "Debug: curl -X POST ${NACOS_URL}"
+  response=$(curl -v -X POST "${NACOS_URL}" \
     -d "dataId=${data_id}" \
     -d "group=${group}" \
-    -d "namespaceId=${NAMESPACE}" \
-    -d "content=${content}" \
-    -u "${NACOS_USERNAME}:${NACOS_PASSWORD}")
+    --data-urlencode "content=${content}")
   
   if [[ "${response}" == "true" ]]; then
     echo "✅ 配置导入成功: ${data_id}"

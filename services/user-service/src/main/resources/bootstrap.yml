@@ -1,6 +1,9 @@
 spring:
   application:
     name: user-service
+  # Add spring.config.import property for Nacos configuration
+  config:
+    import: "optional:nacos:"
   cloud:
     nacos:
       config:

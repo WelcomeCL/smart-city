@@ -73,6 +73,8 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <!-- 跳过主类检查，common模块不需要启动类 -->
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

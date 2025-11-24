@@ -31,9 +31,9 @@ services:
     restart: always
     environment:
       - MODE=standalone
-      - NACOS_AUTH_ENABLE=true
-      - JVM_XMS=512m
-      - JVM_XMX=512m
+      - NACOS_AUTH_ENABLE=false
+      - JVM_XMS=256m
+      - JVM_XMX=256m
     volumes:
       - nacos-data:/home/nacos/data
       - nacos-log:/home/nacos/logs
@@ -58,6 +58,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - NACOS_SERVER_ADDR=nacos-server:8848
+      - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
     ports:
       - "8761:8761"
     depends_on:
@@ -67,28 +68,31 @@ services:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8761/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 60s
     networks:
       - smartcity-network
 
   # API网关服务
   api-gateway:
-    build:
-      context: ./api-gateway
-      dockerfile: Dockerfile
+    build: ./api-gateway
     container_name: api-gateway
     restart: always
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_SERVER_ADDR=nacos-server:8848
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_APPLICATION_NAME=api-gateway
+      - SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR=nacos-server:8848
+      - SPRING_CLOUD_NACOS_CONFIG_NAMESPACE=public
+      - SPRING_CLOUD_NACOS_CONFIG_GROUP=DEFAULT_GROUP
+      - SPRING_CLOUD_NACOS_CONFIG_FILE_EXTENSION=yml
+      - SPRING_CLOUD_NACOS_CONFIG_ENABLED=true
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
     ports:
       - "8080:8080"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      nacos-server:
-        condition: service_healthy
+      - eureka-server
+      - nacos-server
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -105,21 +109,24 @@ services:
     container_name: user-service
     restart: always
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_SERVER_ADDR=nacos-server:8848
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_APPLICATION_NAME=user-service
+      - SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR=nacos-server:8848
+      - SPRING_CLOUD_NACOS_CONFIG_NAMESPACE=public
+      - SPRING_CLOUD_NACOS_CONFIG_GROUP=DEFAULT_GROUP
+      - SPRING_CLOUD_NACOS_CONFIG_FILE_EXTENSION=yml
+      - SPRING_CLOUD_NACOS_CONFIG_ENABLED=true
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/user_db?useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
     ports:
       - "8081:8081"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      nacos-server:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
+      - eureka-server
+      - nacos-server
+      - mysql
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
       interval: 30s
@@ -136,21 +143,24 @@ services:
     container_name: traffic-service
     restart: always
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_SERVER_ADDR=nacos-server:8848
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_APPLICATION_NAME=traffic-service
+      - SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR=nacos-server:8848
+      - SPRING_CLOUD_NACOS_CONFIG_NAMESPACE=public
+      - SPRING_CLOUD_NACOS_CONFIG_GROUP=DEFAULT_GROUP
+      - SPRING_CLOUD_NACOS_CONFIG_FILE_EXTENSION=yml
+      - SPRING_CLOUD_NACOS_CONFIG_ENABLED=true
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/traffic_db?useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
     ports:
       - "8082:8082"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      nacos-server:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
+      - eureka-server
+      - nacos-server
+      - mysql
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
       interval: 30s
