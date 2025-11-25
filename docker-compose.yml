@@ -168,6 +168,40 @@ services:
       retries: 3
     networks:
       - smartcity-network
+  
+  # 后台管理服务
+  admin-service:
+    build:
+      context: ./services/admin-service
+      dockerfile: Dockerfile
+    container_name: admin-service
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_APPLICATION_NAME=admin-service
+      - SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR=nacos-server:8848
+      - SPRING_CLOUD_NACOS_CONFIG_NAMESPACE=public
+      - SPRING_CLOUD_NACOS_CONFIG_GROUP=DEFAULT_GROUP
+      - SPRING_CLOUD_NACOS_CONFIG_FILE_EXTENSION=yml
+      - SPRING_CLOUD_NACOS_CONFIG_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/admin_db?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - nacos-server
+      - mysql
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - smartcity-network
 
 # 网络配置
 networks:

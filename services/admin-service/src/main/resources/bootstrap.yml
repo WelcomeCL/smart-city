@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: admin-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: nacos-server:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        file-extension: yml
+      discovery:
+        server-addr: nacos-server:8848
+        namespace: public
+        group: DEFAULT_GROUP
+
+# 启用配置验证
+spring.cloud.compatibility-verifier.enabled: false

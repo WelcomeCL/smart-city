@@ -1,0 +1,23 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: admin-service
+
+# 应用信息配置
+info:
+  app:
+    name: admin-service
+    version: 1.0.0
+    description: 智慧城市后台管理服务
+
+# 健康检查配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

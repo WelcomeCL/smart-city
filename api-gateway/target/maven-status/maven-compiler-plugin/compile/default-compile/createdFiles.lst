@@ -1,5 +1,0 @@
-com/smartcity/apigateway/config/RouteConfig.class
-com/smartcity/apigateway/filter/ErrorHandlingFilter$Config.class
-com/smartcity/apigateway/filter/ErrorHandlingFilter.class
-com/smartcity/apigateway/ApiGatewayApplication.class
-com/smartcity/apigateway/filter/CorsGlobalFilter.class

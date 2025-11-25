@@ -37,6 +37,7 @@
         <module>api-gateway</module>
         <module>services/user-service</module>
         <module>services/traffic-service</module>
+        <module>services/admin-service</module>
         <module>common</module>
     </modules>
 
