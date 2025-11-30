@@ -1,12 +1,12 @@
 -- 用户模块数据库表结构
--- Schema: user_schema
+-- Schema: user_db
 
 -- 如果schema不存在则创建
-CREATE SCHEMA IF NOT EXISTS user_schema DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE user_schema;
+CREATE SCHEMA IF NOT EXISTS user_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE user_db;
 
 -- 用户表
-CREATE TABLE IF NOT EXISTS user_schema.users (
+CREATE TABLE IF NOT EXISTS user_db.users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '用户ID',
     username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
     password VARCHAR(255) NOT NULL COMMENT '密码（加密存储）',
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS user_schema.users (
 ) ENGINE=InnoDB COMMENT='用户表';
 
 -- 用户角色表
-CREATE TABLE IF NOT EXISTS user_schema.roles (
+CREATE TABLE IF NOT EXISTS user_db.roles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '角色ID',
     role_name VARCHAR(50) NOT NULL UNIQUE COMMENT '角色名称',
     description VARCHAR(255) COMMENT '角色描述',
@@ -37,18 +37,18 @@ CREATE TABLE IF NOT EXISTS user_schema.roles (
 ) ENGINE=InnoDB COMMENT='角色表';
 
 -- 用户-角色关联表
-CREATE TABLE IF NOT EXISTS user_schema.user_roles (
+CREATE TABLE IF NOT EXISTS user_db.user_roles (
     user_id BIGINT NOT NULL COMMENT '用户ID',
     role_id BIGINT NOT NULL COMMENT '角色ID',
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES user_schema.users(id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES user_schema.roles(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user_db.users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES user_db.roles(id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_role_id (role_id)
 ) ENGINE=InnoDB COMMENT='用户-角色关联表';
 
 -- 权限表
-CREATE TABLE IF NOT EXISTS user_schema.permissions (
+CREATE TABLE IF NOT EXISTS user_db.permissions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '权限ID',
     permission_code VARCHAR(100) NOT NULL UNIQUE COMMENT '权限代码',
     permission_name VARCHAR(100) NOT NULL COMMENT '权限名称',
@@ -62,18 +62,18 @@ CREATE TABLE IF NOT EXISTS user_schema.permissions (
 ) ENGINE=InnoDB COMMENT='权限表';
 
 -- 角色-权限关联表
-CREATE TABLE IF NOT EXISTS user_schema.role_permissions (
+CREATE TABLE IF NOT EXISTS user_db.role_permissions (
     role_id BIGINT NOT NULL COMMENT '角色ID',
     permission_id BIGINT NOT NULL COMMENT '权限ID',
     PRIMARY KEY (role_id, permission_id),
-    FOREIGN KEY (role_id) REFERENCES user_schema.roles(id) ON DELETE CASCADE,
-    FOREIGN KEY (permission_id) REFERENCES user_schema.permissions(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES user_db.roles(id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES user_db.permissions(id) ON DELETE CASCADE,
     INDEX idx_role_id (role_id),
     INDEX idx_permission_id (permission_id)
 ) ENGINE=InnoDB COMMENT='角色-权限关联表';
 
 -- 用户登录日志表
-CREATE TABLE IF NOT EXISTS user_schema.login_logs (
+CREATE TABLE IF NOT EXISTS user_db.login_logs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
     user_id BIGINT NOT NULL COMMENT '用户ID',
     login_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
@@ -82,21 +82,21 @@ CREATE TABLE IF NOT EXISTS user_schema.login_logs (
     login_browser VARCHAR(255) COMMENT '登录浏览器',
     login_status TINYINT DEFAULT 1 COMMENT '登录状态：0-失败，1-成功',
     error_message VARCHAR(255) COMMENT '错误信息',
-    FOREIGN KEY (user_id) REFERENCES user_schema.users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user_db.users(id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_login_time (login_time)
 ) ENGINE=InnoDB COMMENT='用户登录日志表';
 
 -- 插入基础数据
 -- 插入默认角色
-INSERT INTO user_schema.roles (role_name, description) VALUES
+INSERT INTO user_db.roles (role_name, description) VALUES
 ('ADMIN', '系统管理员'),
 ('USER', '普通用户'),
 ('GUEST', '访客')
 ON DUPLICATE KEY UPDATE role_name=role_name;
 
 -- 插入默认权限
-INSERT INTO user_schema.permissions (permission_code, permission_name, description, resource_type, resource_path, action) VALUES
+INSERT INTO user_db.permissions (permission_code, permission_name, description, resource_type, resource_path, action) VALUES
 ('USER_VIEW', '查看用户', '查看用户信息', 'USER', '/users', 'GET'),
 ('USER_CREATE', '创建用户', '创建新用户', 'USER', '/users', 'POST'),
 ('USER_UPDATE', '更新用户', '更新用户信息', 'USER', '/users', 'PUT'),
@@ -108,15 +108,15 @@ INSERT INTO user_schema.permissions (permission_code, permission_name, descripti
 ON DUPLICATE KEY UPDATE permission_code=permission_code;
 
 -- 为管理员角色分配权限
-INSERT INTO user_schema.role_permissions (role_id, permission_id) 
+INSERT INTO user_db.role_permissions (role_id, permission_id) 
 SELECT r.id, p.id 
-FROM user_schema.roles r, user_schema.permissions p 
+FROM user_db.roles r, user_db.permissions p 
 WHERE r.role_name = 'ADMIN'
 ON DUPLICATE KEY UPDATE role_id=r.id;
 
 -- 为普通用户分配部分权限
-INSERT INTO user_schema.role_permissions (role_id, permission_id) 
+INSERT INTO user_db.role_permissions (role_id, permission_id) 
 SELECT r.id, p.id 
-FROM user_schema.roles r, user_schema.permissions p 
+FROM user_db.roles r, user_db.permissions p 
 WHERE r.role_name = 'USER' AND p.permission_code IN ('USER_VIEW')
 ON DUPLICATE KEY UPDATE role_id=r.id;

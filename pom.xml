@@ -19,11 +19,11 @@
     <packaging>pom</packaging>
 
     <properties>
-        <!-- 配置为Java 25 -->
-        <java.version>25</java.version>
+        <!-- 配置为已发布的稳定版本Java 21 -->
+        <java.version>21</java.version>
         <spring-boot.version>3.4.5</spring-boot.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
-        <!-- 更新为支持Java 25的最新版本 -->
+        <!-- 使用支持Java 21的版本 -->
         <mysql-connector.version>8.0.33</mysql-connector.version>
         <mybatis.version>3.5.13</mybatis.version>
         <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
@@ -110,8 +110,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>25</source>
-                    <target>25</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

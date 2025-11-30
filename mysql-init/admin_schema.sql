@@ -1,12 +1,12 @@
 -- 管理模块数据库表结构
--- Schema: admin_schema
+-- Schema: admin_db
 
 -- 如果schema不存在则创建
-CREATE SCHEMA IF NOT EXISTS admin_schema DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE admin_schema;
+CREATE SCHEMA IF NOT EXISTS admin_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE admin_db;
 
 -- 系统配置表
-CREATE TABLE IF NOT EXISTS admin_schema.system_configs (
+CREATE TABLE IF NOT EXISTS admin_db.system_configs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '配置ID',
     config_key VARCHAR(100) NOT NULL UNIQUE COMMENT '配置键',
     config_value TEXT NOT NULL COMMENT '配置值',
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.system_configs (
 ) ENGINE=InnoDB COMMENT='系统配置表';
 
 -- 操作日志表
-CREATE TABLE IF NOT EXISTS admin_schema.operation_logs (
+CREATE TABLE IF NOT EXISTS admin_db.operation_logs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
     user_id BIGINT NOT NULL COMMENT '操作用户ID',
     username VARCHAR(50) COMMENT '操作用户名',
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.operation_logs (
 ) ENGINE=InnoDB COMMENT='操作日志表';
 
 -- 数据字典表
-CREATE TABLE IF NOT EXISTS admin_schema.data_dictionary (
+CREATE TABLE IF NOT EXISTS admin_db.data_dictionary (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '字典ID',
     dict_type VARCHAR(50) NOT NULL COMMENT '字典类型',
     dict_code VARCHAR(50) NOT NULL COMMENT '字典编码',
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.data_dictionary (
 ) ENGINE=InnoDB COMMENT='数据字典表';
 
 -- 系统公告表
-CREATE TABLE IF NOT EXISTS admin_schema.system_announcements (
+CREATE TABLE IF NOT EXISTS admin_db.system_announcements (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公告ID',
     title VARCHAR(100) NOT NULL COMMENT '公告标题',
     content TEXT NOT NULL COMMENT '公告内容',
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.system_announcements (
 ) ENGINE=InnoDB COMMENT='系统公告表';
 
 -- 系统监控表
-CREATE TABLE IF NOT EXISTS admin_schema.system_monitoring (
+CREATE TABLE IF NOT EXISTS admin_db.system_monitoring (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '监控ID',
     server_name VARCHAR(100) NOT NULL COMMENT '服务器名称',
     server_ip VARCHAR(50) NOT NULL COMMENT '服务器IP',
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.system_monitoring (
 ) ENGINE=InnoDB COMMENT='系统监控表';
 
 -- 系统模块表
-CREATE TABLE IF NOT EXISTS admin_schema.system_modules (
+CREATE TABLE IF NOT EXISTS admin_db.system_modules (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '模块ID',
     module_name VARCHAR(100) NOT NULL COMMENT '模块名称',
     module_code VARCHAR(50) NOT NULL UNIQUE COMMENT '模块代码',
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.system_modules (
 ) ENGINE=InnoDB COMMENT='系统模块表';
 
 -- 定时任务表
-CREATE TABLE IF NOT EXISTS admin_schema.scheduled_tasks (
+CREATE TABLE IF NOT EXISTS admin_db.scheduled_tasks (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '任务ID',
     task_name VARCHAR(100) NOT NULL COMMENT '任务名称',
     task_code VARCHAR(50) NOT NULL UNIQUE COMMENT '任务代码',
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.scheduled_tasks (
 ) ENGINE=InnoDB COMMENT='定时任务表';
 
 -- 定时任务日志表
-CREATE TABLE IF NOT EXISTS admin_schema.scheduled_task_logs (
+CREATE TABLE IF NOT EXISTS admin_db.scheduled_task_logs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
     task_id BIGINT NOT NULL COMMENT '任务ID',
     task_name VARCHAR(100) COMMENT '任务名称',
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS admin_schema.scheduled_task_logs (
 
 -- 插入基础数据
 -- 插入系统配置数据
-INSERT INTO admin_schema.system_configs (config_key, config_value, config_type, description, group_name) VALUES
+INSERT INTO admin_db.system_configs (config_key, config_value, config_type, description, group_name) VALUES
 ('system.name', 'Smart City Management System', 'string', '系统名称', 'basic'),
 ('system.version', '1.0.0', 'string', '系统版本', 'basic'),
 ('system.maintenance', 'false', 'boolean', '是否维护模式', 'basic'),
@@ -169,7 +169,7 @@ INSERT INTO admin_schema.system_configs (config_key, config_value, config_type, 
 ON DUPLICATE KEY UPDATE config_value=config_value;
 
 -- 插入数据字典类型
-INSERT INTO admin_schema.data_dictionary (dict_type, dict_code, dict_value, dict_text, description, sort_order) VALUES
+INSERT INTO admin_db.data_dictionary (dict_type, dict_code, dict_value, dict_text, description, sort_order) VALUES
 ('user_status', '0', '0', '禁用', '用户状态-禁用', 1),
 ('user_status', '1', '1', '启用', '用户状态-启用', 2),
 ('user_gender', '0', '0', '未知', '用户性别-未知', 1),
@@ -184,7 +184,7 @@ INSERT INTO admin_schema.data_dictionary (dict_type, dict_code, dict_value, dict
 ON DUPLICATE KEY UPDATE dict_text=dict_text;
 
 -- 插入系统模块数据
-INSERT INTO admin_schema.system_modules (module_name, module_code, parent_id, url, icon, sort_order, is_menu) VALUES
+INSERT INTO admin_db.system_modules (module_name, module_code, parent_id, url, icon, sort_order, is_menu) VALUES
 ('系统管理', 'system', 0, '#', 'settings', 1, 1),
 ('用户管理', 'user', 1, '/system/user', 'people', 1, 1),
 ('角色管理', 'role', 1, '/system/role', 'shield-alt', 2, 1),
@@ -206,7 +206,7 @@ INSERT INTO admin_schema.system_modules (module_name, module_code, parent_id, ur
 ON DUPLICATE KEY UPDATE module_name=module_name;
 
 -- 插入定时任务数据
-INSERT INTO admin_schema.scheduled_tasks (task_name, task_code, cron_expression, bean_name, method_name, params, status, remark) VALUES
+INSERT INTO admin_db.scheduled_tasks (task_name, task_code, cron_expression, bean_name, method_name, params, status, remark) VALUES
 ('清理登录日志', 'cleanLoginLog', '0 0 1 * * ?', 'loginLogCleanTask', 'execute', '{"days":30}', 1, '每天凌晨1点清理30天前的登录日志'),
 ('清理操作日志', 'cleanOperationLog', '0 0 2 * * ?', 'operationLogCleanTask', 'execute', '{"days":90}', 1, '每天凌晨2点清理90天前的操作日志'),
 ('系统监控数据采集', 'systemMonitor', '0 */5 * * * ?', 'systemMonitorTask', 'execute', '{}', 1, '每5分钟采集一次系统监控数据'),

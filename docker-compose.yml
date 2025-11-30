@@ -203,6 +203,20 @@ services:
     networks:
       - smartcity-network
 
+  # 前端Web服务
+  web:
+    build:
+      context: ../smart-city-web
+      dockerfile: Dockerfile
+    container_name: smart-city-web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - smartcity-network
+
 # 网络配置
 networks:
   smartcity-network:

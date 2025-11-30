@@ -1,12 +1,12 @@
 -- 交通模块数据库表结构
--- Schema: traffic_schema
+-- Schema: traffic_db
 
 -- 如果schema不存在则创建
-CREATE SCHEMA IF NOT EXISTS traffic_schema DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE traffic_schema;
+CREATE SCHEMA IF NOT EXISTS traffic_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE traffic_db;
 
 -- 道路信息表
-CREATE TABLE IF NOT EXISTS traffic_schema.roads (
+CREATE TABLE IF NOT EXISTS traffic_db.roads (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '道路ID',
     road_name VARCHAR(100) NOT NULL COMMENT '道路名称',
     road_code VARCHAR(50) NOT NULL UNIQUE COMMENT '道路编号',
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.roads (
 ) ENGINE=InnoDB COMMENT='道路信息表';
 
 -- 交通流量监测点表
-CREATE TABLE IF NOT EXISTS traffic_schema.monitoring_points (
+CREATE TABLE IF NOT EXISTS traffic_db.monitoring_points (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '监测点ID',
     point_name VARCHAR(100) NOT NULL COMMENT '监测点名称',
     point_code VARCHAR(50) NOT NULL UNIQUE COMMENT '监测点编号',
@@ -40,13 +40,13 @@ CREATE TABLE IF NOT EXISTS traffic_schema.monitoring_points (
     last_maintain_date DATE COMMENT '最后维护日期',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    FOREIGN KEY (road_id) REFERENCES traffic_schema.roads(id) ON DELETE CASCADE,
+    FOREIGN KEY (road_id) REFERENCES traffic_db.roads(id) ON DELETE CASCADE,
     INDEX idx_road_id (road_id),
     INDEX idx_point_code (point_code)
 ) ENGINE=InnoDB COMMENT='交通流量监测点表';
 
 -- 交通流量数据表
-CREATE TABLE IF NOT EXISTS traffic_schema.traffic_flows (
+CREATE TABLE IF NOT EXISTS traffic_db.traffic_flows (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '流量数据ID',
     monitoring_point_id BIGINT NOT NULL COMMENT '监测点ID',
     flow_value INT NOT NULL COMMENT '流量值（辆/小时）',
@@ -55,14 +55,14 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_flows (
     congestion_level TINYINT COMMENT '拥堵等级：1-畅通，2-基本畅通，3-轻度拥堵，4-中度拥堵，5-严重拥堵',
     data_time DATETIME NOT NULL COMMENT '数据采集时间',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
-    FOREIGN KEY (monitoring_point_id) REFERENCES traffic_schema.monitoring_points(id) ON DELETE CASCADE,
+    FOREIGN KEY (monitoring_point_id) REFERENCES traffic_db.monitoring_points(id) ON DELETE CASCADE,
     INDEX idx_monitoring_point_id (monitoring_point_id),
     INDEX idx_data_time (data_time),
     INDEX idx_congestion_level (congestion_level)
 ) ENGINE=InnoDB COMMENT='交通流量数据表';
 
 -- 交通事件表
-CREATE TABLE IF NOT EXISTS traffic_schema.traffic_events (
+CREATE TABLE IF NOT EXISTS traffic_db.traffic_events (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '事件ID',
     event_type TINYINT NOT NULL COMMENT '事件类型：1-交通事故，2-道路施工，3-车辆抛锚，4-恶劣天气，5-交通管制，6-其他',
     road_id BIGINT NOT NULL COMMENT '所属道路ID',
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_events (
     updated_by BIGINT COMMENT '更新人ID',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    FOREIGN KEY (road_id) REFERENCES traffic_schema.roads(id) ON DELETE CASCADE,
+    FOREIGN KEY (road_id) REFERENCES traffic_db.roads(id) ON DELETE CASCADE,
     INDEX idx_event_type (event_type),
     INDEX idx_road_id (road_id),
     INDEX idx_start_time (start_time),
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_events (
 ) ENGINE=InnoDB COMMENT='交通事件表';
 
 -- 信号灯控制表
-CREATE TABLE IF NOT EXISTS traffic_schema.traffic_lights (
+CREATE TABLE IF NOT EXISTS traffic_db.traffic_lights (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '信号灯ID',
     light_name VARCHAR(100) NOT NULL COMMENT '信号灯名称',
     light_code VARCHAR(50) NOT NULL UNIQUE COMMENT '信号灯编号',
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_lights (
 ) ENGINE=InnoDB COMMENT='信号灯控制表';
 
 -- 交通预警表
-CREATE TABLE IF NOT EXISTS traffic_schema.traffic_alerts (
+CREATE TABLE IF NOT EXISTS traffic_db.traffic_alerts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '预警ID',
     alert_type TINYINT NOT NULL COMMENT '预警类型：1-拥堵预警，2-事故预警，3-恶劣天气预警，4-道路施工预警',
     title VARCHAR(100) NOT NULL COMMENT '预警标题',
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_alerts (
 ) ENGINE=InnoDB COMMENT='交通预警表';
 
 -- 交通摄像头表
-CREATE TABLE IF NOT EXISTS traffic_schema.traffic_cameras (
+CREATE TABLE IF NOT EXISTS traffic_db.traffic_cameras (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '摄像头ID',
     camera_name VARCHAR(100) NOT NULL COMMENT '摄像头名称',
     camera_code VARCHAR(50) NOT NULL UNIQUE COMMENT '摄像头编号',
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_cameras (
     last_maintain_date DATE COMMENT '最后维护日期',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    FOREIGN KEY (road_id) REFERENCES traffic_schema.roads(id) ON DELETE CASCADE,
+    FOREIGN KEY (road_id) REFERENCES traffic_db.roads(id) ON DELETE CASCADE,
     INDEX idx_road_id (road_id),
     INDEX idx_camera_code (camera_code),
     INDEX idx_status (status)
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS traffic_schema.traffic_cameras (
 
 -- 插入基础数据
 -- 插入道路数据
-INSERT INTO traffic_schema.roads (road_name, road_code, road_type, length, lanes, speed_limit) VALUES
+INSERT INTO traffic_db.roads (road_name, road_code, road_type, length, lanes, speed_limit) VALUES
 ('中山路', 'RD001', 4, 15.5, 6, 60),
 ('解放路', 'RD002', 4, 12.3, 4, 60),
 ('环城高速', 'RD003', 1, 45.8, 8, 120),
@@ -158,7 +158,7 @@ INSERT INTO traffic_schema.roads (road_name, road_code, road_type, length, lanes
 ON DUPLICATE KEY UPDATE road_name=road_name;
 
 -- 插入监测点数据
-INSERT INTO traffic_schema.monitoring_points (point_name, point_code, road_id, latitude, longitude, direction) VALUES
+INSERT INTO traffic_db.monitoring_points (point_name, point_code, road_id, latitude, longitude, direction) VALUES
 ('中山路监测点1', 'MP001', 1, 31.230416, 121.473701, 3),
 ('解放路监测点1', 'MP002', 2, 31.235618, 121.469648, 3),
 ('环城高速监测点1', 'MP003', 3, 31.243579, 121.483671, 1),
@@ -168,7 +168,7 @@ INSERT INTO traffic_schema.monitoring_points (point_name, point_code, road_id, l
 ON DUPLICATE KEY UPDATE point_name=point_name;
 
 -- 插入信号灯数据
-INSERT INTO traffic_schema.traffic_lights (light_name, light_code, intersection_name, latitude, longitude, cycle_time, red_time, green_time, yellow_time) VALUES
+INSERT INTO traffic_db.traffic_lights (light_name, light_code, intersection_name, latitude, longitude, cycle_time, red_time, green_time, yellow_time) VALUES
 ('中山路-解放路路口', 'TL001', '中山解路口', 31.232416, 121.471701, 120, 60, 55, 5),
 ('中山路-东环路路口', 'TL002', '中山东环路口', 31.230416, 121.476701, 90, 45, 40, 5),
 ('西湖大道-解放路路口', 'TL003', '西湖解路口', 31.225416, 121.466701, 100, 50, 45, 5)

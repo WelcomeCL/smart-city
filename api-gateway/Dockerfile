@@ -1,8 +1,8 @@
 # 使用预编译的jar文件构建镜像
-FROM openjdk:25-ea-jdk
-# 使用OpenJDK Java 25早期访问版本，它应该支持Java 25编译的class file format (version 69.0)
-# 设置JVM参数以支持更高版本的class file format
-ENV JAVA_OPTS="--enable-preview -Dspring.config.import=optional:nacos: -Dspring.cloud.nacos.config.import-check.enabled=false"
+FROM openjdk:21-jdk
+# 使用OpenJDK Java 21稳定版本
+# 设置JVM参数
+ENV JAVA_OPTS="-Dspring.config.import=optional:nacos: -Dspring.cloud.nacos.config.import-check.enabled=false"
 
 # 设置环境变量
 ENV SPRING_PROFILES_ACTIVE=prod
