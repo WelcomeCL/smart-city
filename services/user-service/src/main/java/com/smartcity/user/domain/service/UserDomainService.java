@@ -23,6 +23,13 @@ public class UserDomainService {
      * 创建新用户，包含验证逻辑
      */
     public User createUser(Long id, String username, String password, String email, String phone) {
+        return createUser(id, username, password, email, phone, User.UserRole.USER);
+    }
+    
+    /**
+     * 创建新用户，包含验证逻辑和角色支持
+     */
+    public User createUser(Long id, String username, String password, String email, String phone, User.UserRole role) {
         // 验证唯一性约束
         if (userRepository.existsByUsername(username)) {
             throw new RuntimeException("用户名已存在");
@@ -37,7 +44,7 @@ public class UserDomainService {
         }
         
         // 创建用户实体
-        User user = new User(id, username, password, email, phone);
+        User user = new User(id, username, password, email, phone, role);
         
         // 保存用户
         return userRepository.save(user);

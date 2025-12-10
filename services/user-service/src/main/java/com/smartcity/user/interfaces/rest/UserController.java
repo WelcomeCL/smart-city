@@ -3,7 +3,6 @@ package com.smartcity.user.interfaces.rest;
 import com.smartcity.user.application.dto.*;
 import com.smartcity.user.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-// ResponseEntity导入将在代码中使用完全限定名
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-// 移除了Valid验证注解的导入
+import javax.validation.Valid;
 
 /**
  * 用户REST API控制器
@@ -35,7 +33,7 @@ public class UserController {
      * 创建新用户
      */
     @PostMapping
-    public UserResponse createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
     
@@ -51,7 +49,7 @@ public class UserController {
      * 更新用户信息
      */
     @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
         return userService.updateUser(id, request);
     }
     
@@ -67,7 +65,7 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return userService.login(request);
     }
     

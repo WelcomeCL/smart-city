@@ -12,6 +12,7 @@ public class UserResponse {
     private String username;
     private String email;
     private String phone;
+    private String role;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -31,6 +32,10 @@ public class UserResponse {
     
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
     }
     
     public void setStatus(String status) {

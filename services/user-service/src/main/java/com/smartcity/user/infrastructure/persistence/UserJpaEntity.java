@@ -31,6 +31,10 @@ public class UserJpaEntity {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private User.UserRole role;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private User.UserStatus status;
     
     @Column(nullable = false)
@@ -55,6 +59,9 @@ public class UserJpaEntity {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     
+    public User.UserRole getRole() { return role; }
+    public void setRole(User.UserRole role) { this.role = role; }
+    
     public User.UserStatus getStatus() { return status; }
     public void setStatus(User.UserStatus status) { this.status = status; }
     
@@ -74,6 +81,7 @@ public class UserJpaEntity {
         entity.setPassword(user.getPassword());
         entity.setEmail(user.getEmail());
         entity.setPhone(user.getPhone());
+        entity.setRole(user.getRole());
         entity.setStatus(user.getStatus());
         entity.setCreatedAt(user.getCreatedAt());
         entity.setUpdatedAt(user.getUpdatedAt());
@@ -84,9 +92,7 @@ public class UserJpaEntity {
      * 从JPA实体转换为领域实体
      */
     public User toDomainEntity() {
-        User user = new User(id, username, password, email, phone);
-        // 直接设置状态和时间戳
-        // 注意：在实际应用中，可能需要通过反射或其他方式来设置私有字段
+        User user = new User(id, username, password, email, phone, role);
         return user;
     }
 }

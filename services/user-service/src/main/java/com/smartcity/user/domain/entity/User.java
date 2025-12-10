@@ -13,6 +13,7 @@ public class User {
     private String password;
     private String email;
     private String phone;
+    private UserRole role;
     private UserStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -27,6 +28,22 @@ public class User {
         this.password = password;
         this.email = email;
         this.phone = phone;
+        this.role = UserRole.USER;
+        this.status = UserStatus.ACTIVE;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * 构造函数，创建带角色的新用户
+     */
+    public User(Long id, String username, String password, String email, String phone, UserRole role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
         this.status = UserStatus.ACTIVE;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -53,6 +70,10 @@ public class User {
         return phone;
     }
     
+    public UserRole getRole() {
+        return role;
+    }
+    
     public UserStatus getStatus() {
         return status;
     }
@@ -71,10 +92,24 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
     
+    // 设置角色
+    public void setRole(UserRole role) {
+        this.role = role;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
     // 更新用户信息
     public void update(String email, String phone) {
         this.email = email;
         this.phone = phone;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    // 更新用户信息（包含角色）
+    public void update(String email, String phone, UserRole role) {
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
         this.updatedAt = LocalDateTime.now();
     }
     
@@ -94,6 +129,14 @@ public class User {
     public void resetPassword(String newPassword) {
         this.password = newPassword;
         this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * 用户角色枚举
+     */
+    public enum UserRole {
+        USER,      // 普通用户
+        ADMIN      // 管理员
     }
     
     /**
